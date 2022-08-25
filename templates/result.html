@@ -33,11 +33,23 @@
         <strong>{{ odai }}</strong>
         <hr>
       </div>
+      
       {% for player in player_list[:-1] %}
+      {% if loop.index0 >0 %}
+      <h5>{{player}}さんの予想：{{predict_list[loop.index0]}}</h5>  
+      {% endif %}
       <h5>{{player}}さんの骨格</h5>     
-      {% for image in images_list[loop.index0] %}
-      <img src="{{image}}"  width="300" height="200" style="border:2px solid">
-      {% endfor %}
+      <div class="d-flex justify-content-around mb-3">
+        {% for image in images_list[loop.index0] %}
+        <img src="{{image}}"  width="300" height="200" style="border:2px solid">
+        {% endfor %}
+      </div>
+
+      <div class="d-flex justify-content-around mb-3">
+        {% for image in images_list[loop.index0] %}
+        <h5>{{loop.index}}コマ目</h5>
+        {% endfor %}
+      </div>
       <hr>
       
       {% endfor %} 

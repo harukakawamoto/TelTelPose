@@ -3,3 +3,4 @@ flask==2.1.3
 mediapipe==0.8.10.1
 pillow==9.2.0
 numpy==1.21.6
+opencv-pyhton==4.6.0

@@ -113,6 +113,18 @@
     <button class="send_image btn btn-primary btn-lg" type="submit">{{ next_user }}</button> 
 </div>
 
+{% if len==0 %}
+<div hidden>
+  <input placeholder="何を表現してますか" id="anser">
+</div>
+{% endif %}
+{% if len>0 %}
+<div>
+  <input placeholder="何を表現してますか" id="anser">
+</div>
+{% endif %}
+
+
 
 
 <!-- シャッター音の設定 -->
@@ -134,14 +146,16 @@ function send_img(canvas1,canvas2,canvas3,canvas4){
   var base642 = canvas2.toDataURL('image/jpg');
   var base643 = canvas3.toDataURL('image/jpg');
   var base644 = canvas4.toDataURL('image/jpg');
+  var anser   = document.getElementById('anser');
+  
 
   var fData = new FormData();
   fData.append('img1', base641);
   fData.append('img2', base642);
   fData.append('img3', base643);
   fData.append('img4', base644);
-  // fData.append('odai', odai_predict.value);
-  // console.log(fData.get('img'))
+  fData.append('anser', anser.value);
+  console.log(fData.get('anser'))
 
 // ajax送信
   $.ajax({

@@ -1,3 +1,4 @@
+from genericpath import isdir
 from unittest import result
 from flask import render_template, Flask, Response, request, redirect, url_for,session,Blueprint
 import base64
@@ -8,7 +9,9 @@ from PIL import Image
 import mediapipe as mp
 import numpy as np
 
-
+if not os.path.isdir('./static/image'):
+    os.mkdir('./static/image')
+    
 #骨格推定に必要なインスタンスを生成
 mp_drawing = mp.solutions.drawing_utils
 mp_drawing_styles = mp.solutions.drawing_styles
@@ -38,9 +41,9 @@ app.config['SECRET_KEY'] = 'teltelpose'
 
 @app.route('/',methods=['POST', 'GET'])
 def index():
-    img_folder = os.listdir('web_app_js_total\static\image')
+    img_folder = os.listdir('./static/image')
     for img in img_folder:
-        os.remove('web_app_js_total/static/image/'+img)
+        os.remove('./static/image/'+img)
 
     return render_template('index.html')
 
@@ -54,11 +57,13 @@ def odai():
         session['player_list'] = player_list
         session['player_num']  = len(player_list)
         session['count']       = 0
+        session['anser_predict'] = []
     else:
         # pass
         session['player_list'] = player_list
         session['player_num']  = len(player_list)
         session['count']       = 0
+        session['anser_predict'] = []
 
     # print(session['player_list'])
     # print(session['player_num'])
@@ -70,7 +75,7 @@ def odai():
 @app.route('/playing',methods=['GET','POST'])
 def get_odai():
     user_name = session['player_list'][session['count']]
-    images = ['image/'+img for img in os.listdir('web_app_js_total/static/image')[-4:]]
+    images = ['image/'+img for img in os.listdir('./static/image')[-4:]]
     # print(images)
     if session['count']+1 <= len(session['player_list'])-1:
         if session['count']+1 <= len(session['player_list'])-2:
@@ -100,11 +105,12 @@ def get_odai():
 #骨格を送るボタンを押したら処理される部分
 @app.route('/image_save', methods=['POST','GET'])
 def image_save():
-    file = 'web_app_js_total/base.jpg'
+    file = './base.jpg'
     base_image = Image.open(file)
     base_image = np.asarray(base_image)
     image_num = ['img1','img2','img3','img4']
     user_num = session['count']
+    session['anser_predict'].append(request.form['anser'])
     for i,num in enumerate(image_num):
         enc_data  = request.form[num]
         dec_data = base64.b64decode(enc_data.split(',')[1] ) # 環境依存の様(","で区切って本体をdecode)
@@ -120,7 +126,7 @@ def image_save():
                 mp_pose.POSE_CONNECTIONS,
                 landmark_drawing_spec=mp_drawing_styles.get_default_pose_landmarks_style())
         im = Image.fromarray(base)
-        im.save('web_app_js_total/static/image/image'+str(user_num)+str(i)+'.jpg')
+        im.save('./static/image/image'+str(user_num)+str(i)+'.jpg')
     session['count']+=1
     user_name = session['player_list'][session['count']]
     # print(user_name)
@@ -131,10 +137,11 @@ def anser():
     anser = request.form.get('anser_txt')
     odai = session['odai']
     player_list = session['player_list']
-    image_list = ['image/'+img for img in os.listdir('web_app_js_total/static/image')]
+    image_list = ['image/'+img for img in os.listdir('./static/image')]
     image_list = [image_list[idx:idx + 4] for idx in range(0,len(image_list), 4)]
     # print(image_list)
-    return render_template('result.html', anser=anser, odai=odai, player_list=player_list, images_list=image_list)
+    
+    return render_template('result.html', anser=anser, odai=odai, player_list=player_list, images_list=image_list, predict_list = session['anser_predict'])
 
 
 
