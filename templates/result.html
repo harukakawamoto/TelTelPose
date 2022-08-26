@@ -10,7 +10,7 @@
     
 
       
-      <title>result</title>
+    <title>TelTelPose</title>
   </head>
   <script>
     function doReload() {
@@ -24,7 +24,14 @@
     });
   </script>
   <body>
-    <div class="container">
+    <header class="bd-header bg-dark py-3 d-flex align-items-stretch border-bottom border-dark">
+      <div class="container-fluid d-flex align-items-center">
+          <h1 class="d-flex align-items-center fs-4 text-white mb-0">
+              TelTelPose
+          </h1>
+      </div>
+    </header>
+    <div class="mt-4 container">
       <h2>結果だよ！お題とみんなの回答</h2>
   
       <!--playerごとに回答を表示-->
@@ -59,7 +66,7 @@
     </div>
     <form id="player" name="player" method="post" action="{{url_for('index')}}">
       <div class="d-flex justify-content-evenly">
-          <button class=" btn btn-primary btn-lg" type="submit">もう一度遊ぶ</button> 
+          <button class=" btn btn-info btn-lg" type="submit">もう一度遊ぶ</button> 
       </div>
   </form>
   </body>

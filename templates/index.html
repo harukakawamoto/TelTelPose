@@ -3,7 +3,7 @@
 
 <head>
   <meta charset="utf-8">
-  <title>動作を骨格推定して伝言ゲーム的なやーつ</title>
+  <title>TelTelPose</title>
   <meta name="description" content="最初の人がお題を決めてジェスチャーして伝えようゲーム。ただし次の人に伝わるのは前の人の骨格だけだよ">
   <meta name="viewport" content="width=device-width, initial-scale=1">
 
@@ -23,11 +23,18 @@
 </head>
 
 <body>
-  <div class="container">
-    <!-- Add your site or application content here -->
+  
+  <header class="bd-header bg-dark py-3 d-flex align-items-stretch border-bottom border-dark">
+  <div class="container-fluid d-flex align-items-center">
+    <h1 class="d-flex align-items-center fs-4 text-white mb-0">
+      TelTelPose
+    </h1>
+    
+  </div>
+</header>
 
-
-    <p>お題をジェスチャーで再現したやつの”骨格だけ”を次の人に回していって最後の人がお題を当てるゲーム.</p>
+    <div class="container">
+      <!-- Add your site or application content here -->
     
     <!-- Google Analytics: change UA-XXXXX-Y to be your site's ID. -->
     <script>
@@ -51,19 +58,33 @@
     });
     </script>
 <!-- ---------------------------------------------- -->
+
+<div class="mt-4 p-5 mb-4 bg-light rounded-3" style="padding-top:20px">
+  <div class="container-fluid py-5">
+    <h1 class="display-5 fw-bold" >TelTelPose</h1>
+    <p class="col-md-8 fs-4">
+      お題をジェスチャーで表現した画像の
+      <strong>”骨格だけ”</strong>を次の人に回して最後の人がお題を当てるゲーム.<br>
+      骨格だけになった姿でお題を伝えよう.</p>
+    
+  </div>
+</div>
+
     <div>
       <form id="player" name="player" method="post" action="{{url_for('odai')}}">
-        <p>プレイヤーを追加する</p>
+        <p class="col-md-8 fs-5">プレイヤーを追加する</p>
+        <input type="text" name = 'player_name'class="player_name" placeholder="出題者" required>
         <div id="input_pluralBox">
-            <div id="input_plural">
-                <input type="text" name = 'player_name'class="player_name" placeholder="ニックネーム" required>
-                <input type="button" value="＋" class="add pluralBtn">
-                <input type="button" value="－" class="del pluralBtn">
+            <div id="input_plural" class="mt-2 mb-2 ">
+                <input type="text" name = 'player_name'class="player_name" placeholder="伝言者" required>
+                <input type="button" value="＋" class="add pluralBtn btn btn-secondary btn-sm">
+                <input type="button" value="－" class="del pluralBtn btn btn-secondary btn-sm">
             </div>
-        </div>
+          </div>
+          <input type="text" name = 'player_name'class="player_name" placeholder="回答者" required>
     
-        <div class="d-flex justify-content-evenly">
-            <button class="odai btn btn-primary btn-lg" type="submit">お題を決める</button>    
+        <div class="mt-2 d-flex justify-content-evenly">
+            <button class="odai btn btn-info btn-lg" type="submit">お題を決める</button>    
         </div>
     </form>
     </div>
@@ -76,17 +97,19 @@
 
   <!--プレイ方法-->
   <p>
-    <button class="btn btn-primary" type="button" data-bs-toggle="collapse" data-bs-target=".multi-collapse" aria-expanded ="true" aria-controls="multiCollapseExample1 multiCollapseExample2 multiCollapseExample3 multiCollapseExample4">あそび方</button>
+    <button class="btn btn-dark" type="button" data-bs-toggle="collapse" data-bs-target=".multi-collapse" aria-expanded ="true" aria-controls="multiCollapseExample1 multiCollapseExample2 multiCollapseExample3 multiCollapseExample4">あそび方</button>
   </p>
+
   <div >
     <div class="row">
       <div class="collapse multi-collapse" id="multiCollapseExample1">
         <div class="card card-body">
-          <h2>１</h2>
+          <h2>１ お題を決めよう</h2>
           <p>
-          「TelTelPose」とは、一言でいうと伝言ゲームの亜種。<br>
-          最初の人が、お題を決めるよ<br>
-          決めたお題を次の人に伝えるためにジェスチャーしよう
+          「TelTelPose」とは、一言でいうと伝言ゲームの骨格版.<br>
+          最初の人は解答となるお題を決めてください<br>
+          お題を決めてから、<button class=" btn btn-info btn-sm " >START</button>を押すとカメラが起動するよ
+          
         
         </p>
         </div>
@@ -95,9 +118,16 @@
     <div class="row">
       <div class="collapse multi-collapse" id="multiCollapseExample2">
         <div class="card card-body">
-          <h2>２</h2>
-          <p>ジェスチャーは4コマのシーンに分けて撮影<br>
-            撮影された画像は”骨格だけ”になって次の人にパス</p>
+          <h2>２ 骨格を撮影しよう</h2>
+          <p>
+            お題を決めた人は次の人に伝えるためにジェスチャーで表現しよう.
+            ジェスチャーは4コマのシーンに分けて撮影<br>
+            シャッターボタンを押すと5秒後に撮りたいコマの画像が撮れます
+            撮影された画像は、その人の”骨格だけ”になって次の人にパス<br>
+            コマごとに撮りなおすことも出来るよ
+            <br>撮影する人以外の人は見えないように後ろを向いてください!!
+
+          </p>
         </div>
       </div>
     </div>
@@ -105,9 +135,11 @@
     <div class="row">
       <div class="collapse multi-collapse" id="multiCollapseExample3">
         <div class="card card-body">
-          <h2>３</h2>
-          <p>次の人は骨格だけになった4コマの画像を見て、お題を予想！<br>
-            予想したお題を同じように撮影して次の人にパス</p>
+          <h2>３ 次の人へパスしよう</h2>
+          <p>
+            次の人は骨格だけになった4コマの画像を見て、お題を予想<br>
+            前の人の画像から汲み取ったお題を入力してください.
+            予想したお題を同じように撮影して<button class=" btn btn-info btn-sm " >骨格を送る</button>で次の人にパス</p>
         </div>
       </div>
     </div>
@@ -115,27 +147,17 @@
     <div class="row">
       <div class="collapse multi-collapse" id="multiCollapseExample4">
         <div class="card card-body">
-          <h2>４！！！！</h2>
+          <h2>４ 最後の人まできたら...</h2>
           <p>
-            最後の人がお題を回答<br>
-            骨格だけで正しくお題は伝わるのか？！
+            最後の人は回ってきた画像からお題を回答してください<br>
+            回答すると、答え合わせで正解のお題とみんなの骨格が表示されるよ<br>
+            推薦人数:四人以上
+           
           </p>
         </div>
       </div>
     </div>
   </div>
-
-
-    
-
-
-
-
-    
-
-
-
-
 
 
 
