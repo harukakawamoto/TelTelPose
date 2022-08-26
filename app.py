@@ -8,6 +8,7 @@ import os
 from PIL import Image
 import mediapipe as mp
 import numpy as np
+import re
 
 if not os.path.isdir('./static/image'):
     os.mkdir('./static/image')
@@ -75,7 +76,8 @@ def odai():
 @app.route('/playing',methods=['GET','POST'])
 def get_odai():
     user_name = session['player_list'][session['count']]
-    images = ['image/'+img for img in os.listdir('./static/image')[-4:]]
+    images = sorted(os.listdir('./static/image'), key=lambda s: int(re.search(r'\d+', s).group()))
+    images = ['image/'+img for img in images[-4:]]
     # print(images)
     if session['count']+1 <= len(session['player_list'])-1:
         if session['count']+1 <= len(session['player_list'])-2:
@@ -140,7 +142,8 @@ def anser():
     anser = request.form.get('anser_txt')
     odai = session['odai']
     player_list = session['player_list']
-    image_list = ['image/'+img for img in os.listdir('./static/image')]
+    images = sorted(os.listdir('./static/image'), key=lambda s: int(re.search(r'\d+', s).group()))
+    image_list = ['image/'+img for img in images]
     image_list = [image_list[idx:idx + 4] for idx in range(0,len(image_list), 4)]
     # print(image_list)
     
