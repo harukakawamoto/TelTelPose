@@ -40,6 +40,18 @@
     </div>
     {% endif %}
   </div>
+
+  {% if len==0 %}
+  <div hidden >
+    <input placeholder="何を表現してますか" id="anser" required>
+  </div>
+  {% endif %}
+  {% if len>0 %}
+  <div  class="mt-3 mb-4 d-flex justify-content-evenly">
+    <input type="text" placeholder="お題は何だと思いましたか？" class="form-control input-lg" id="anser" required>
+  </div>
+  {% endif %}
+
   <!-- webカメラの表示部分 -->
   <!--------------------------------------------------------------------------------------->
   
@@ -115,16 +127,7 @@
   </div>
   <!--------------------------------------------------------------------------------------->
   
-  {% if len==0 %}
-  <div hidden >
-    <input placeholder="何を表現してますか" id="anser" required>
-  </div>
-  {% endif %}
-  {% if len>0 %}
-  <div  class="mt-3 d-flex justify-content-evenly">
-    <input type="text" placeholder="お題は何だと思いましたか？" class="form-control input-lg" id="anser" required>
-  </div>
-  {% endif %}
+  
 
   <div class="d-flex justify-content-evenly mt-4">
       <button class="send_image btn btn-info btn-lg" type="submit">{{ next_user }}</button> 
