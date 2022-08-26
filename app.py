@@ -110,7 +110,10 @@ def image_save():
     base_image = np.asarray(base_image)
     image_num = ['img1','img2','img3','img4']
     user_num = session['count']
-    session['anser_predict'].append(request.form['anser'])
+    anser = request.form['anser']
+    if anser == '':
+        anser='未回答'
+    session['anser_predict'].append(anser)
     for i,num in enumerate(image_num):
         enc_data  = request.form[num]
         dec_data = base64.b64decode(enc_data.split(',')[1] ) # 環境依存の様(","で区切って本体をdecode)
