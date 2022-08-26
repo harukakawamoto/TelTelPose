@@ -19,33 +19,31 @@
     }
 
     window.addEventListener('load', function () {
-    // ページ表示完了した5秒後にリロード
     doReload;
     });
   </script>
   <body>
-    <header class="bd-header bg-dark py-3 d-flex align-items-stretch border-bottom border-dark">
-      <div class="container-fluid d-flex align-items-center">
-          <h1 class="d-flex align-items-center fs-4 text-white mb-0">
-              TelTelPose
-          </h1>
-      </div>
+    <header class=" bd-header bg-dark py-3  border-dark" >
+      <h2 class="text-light" style="text-align:center"><b>TelTelPose</b></h2>
     </header>
+
+
     <div class="mt-4 container">
-      <h2>結果だよ！お題とみんなの回答</h2>
-  
+      <h2 class='text-center'>お題とみんなの回答</h2>
+      <hr>
       <!--playerごとに回答を表示-->
       <div class="odai">
-        <h5>{{player_list[0]}}さんのひみつのお題</h5>
-        <strong>{{ odai }}</strong>
-        <hr>
+        <h3>{{player_list[0]}}さんのひみつのお題：「{{ odai }}」</h3>
+        <!-- <h3>{{ odai }}</h3> -->
+       
+
       </div>
       
       {% for player in player_list[:-1] %}
       {% if loop.index0 >0 %}
-      <h5>{{player}}さんの予想：{{predict_list[loop.index0]}}</h5>  
+      <h4>{{player}}さんの予想：「{{predict_list[loop.index0]}}」</h4>  
       {% endif %}
-      <h5>{{player}}さんの骨格</h5>     
+      <h4>{{player}}さんの骨格</h4>     
       <div class="d-flex justify-content-around mb-3">
         {% for image in images_list[loop.index0] %}
         <img src="{{image}}"  width="300" height="200" style="border:2px solid">
@@ -61,7 +59,7 @@
       
       {% endfor %} 
 
-      <h5>{{player_list[-1]}}さんの回答:{{ anser }}</h5>     
+      <h4>{{player_list[-1]}}さんの回答:「{{ anser }}」</h4>     
       
     </div>
     <form id="player" name="player" method="post" action="{{url_for('index')}}">

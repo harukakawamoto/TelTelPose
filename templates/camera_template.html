@@ -16,12 +16,8 @@
 
 </head>
 <body>
-<header class="bd-header bg-dark py-3 d-flex align-items-stretch border-bottom border-dark">
-  <div class="container-fluid d-flex align-items-center">
-    <h1 class="d-flex align-items-center fs-4 text-white mb-0">
-        TelTelPose
-    </h1>
-  </div>
+<header class=" bd-header bg-dark py-3  border-dark" >
+  <h2 class="text-light" style="text-align:center"><b>TelTelPose</b></h2>
 </header>
 
 <div class="container">
@@ -46,10 +42,11 @@
   </div>
   <!-- webカメラの表示部分 -->
   <!--------------------------------------------------------------------------------------->
+  
   <div class="d-flex justify-content-evenly mb-3">
-    <h1 class="counter"></h1>
-    <video id="camera" width="60%" ></video>
-    <h1 class="counter"></h1>
+    <h1 class="display-1" id="count1"></h1>
+    <video id="camera" width="60%" style="border:3px solid"></video>
+    <h1  class="display-1" id="count2"></h1>
   </div>
   <!--------------------------------------------------------------------------------------->
   <div class="d-flex justify-content-evenly mt-3 mb-3">
@@ -110,7 +107,7 @@
           <form>
             <div class="d-flex justify-content-evenly">
               <button type="button" class="shutter4 btn-secondary">4コマ目を撮り直す
-                
+
               </button>
             </div>
           </form>
@@ -257,6 +254,7 @@ document.getElementsByClassName("all_click")[0].addEventListener("click", () => 
  */
 //   シャッターボタンが押されたときの処理
 document.getElementsByClassName("shutter1")[0].addEventListener("click", () => {
+  count();
   const ctx = canvas1.getContext("2d");
 
   // 演出的な目的で一度映像を止めてSEを再生する
@@ -278,6 +276,7 @@ document.getElementsByClassName("shutter1")[0].addEventListener("click", () => {
 
 
 document.getElementsByClassName("shutter2")[0].addEventListener("click", () => {
+  count();
   const ctx = canvas2.getContext("2d");
 
   // 演出的な目的で一度映像を止めてSEを再生する
@@ -296,6 +295,7 @@ document.getElementsByClassName("shutter2")[0].addEventListener("click", () => {
 
 
 document.getElementsByClassName("shutter3")[0].addEventListener("click", () => {
+  count();
   const ctx = canvas3.getContext("2d");
 
   // 演出的な目的で一度映像を止めてSEを再生する
@@ -314,6 +314,7 @@ document.getElementsByClassName("shutter3")[0].addEventListener("click", () => {
 
 
 document.getElementsByClassName("shutter4")[0].addEventListener("click", () => {
+  count();
   const ctx = canvas4.getContext("2d");
 
   // 演出的な目的で一度映像を止めてSEを再生する
@@ -336,6 +337,35 @@ document.getElementsByClassName("send_image")[0].addEventListener("click", () =>
   send_img(canvas1,canvas2,canvas3,canvas4)
 });
 };
+
+// カメラのタイマー関数
+function count(){
+  var counter1 = document.getElementById("count1");
+  var counter2 = document.getElementById("count2");
+  let count = 4;
+  const countUp = () =>{
+    
+    if(count==0){
+      counter1.textContent='📷';
+      counter2.textContent='📷';
+    }else{
+      counter1.textContent=count;
+      counter2.textContent=count;
+    }
+    console.log(count--);
+    
+    
+  }
+  const intervalId = setInterval(() =>{
+    countUp();
+    if(count < 0){
+      
+      clearInterval(intervalId);//intervalIdをclearIntervalで指定している
+    }
+    }, 1000);
+    
+    
+}
 </script>
 <!----------------------------------------------------------------------------------------------------->
 </body>

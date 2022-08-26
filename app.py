@@ -30,9 +30,10 @@ def pose_est(image):
 
 
 # ----------------------------------------ここからFlask---------------------------------------------
-app = Flask(__name__,static_folder='./static/image')
+app = Flask(__name__,static_folder='./static')
 image = Blueprint("image", __name__, static_url_path='/image', static_folder='./static/image')
 app.register_blueprint(image)
+
 
 #セッションキーの設定
 app.config['SECRET_KEY'] = 'teltelpose'
