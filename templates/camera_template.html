@@ -52,7 +52,9 @@
     <h1 class="counter"></h1>
   </div>
   <!--------------------------------------------------------------------------------------->
-
+  <div class="d-flex justify-content-evenly mt-3 mb-3">
+    <button type="button" class="all_click btn-secondary">一度に４コマ撮影</button>
+  </div>
   <!-- 取った写真を表示する部分 -->
   <!--------------------------------------------------------------------------------------->
   <div class="d-flex justify-content-around">
@@ -64,7 +66,7 @@
         <!-- シャッターボタン -->
         <form>
           <div class="d-flex justify-content-evenly">
-            <button type="button" class="shutter1 btn-secondary">1コマ目</button>
+            <button type="button" class="shutter1 btn-secondary">1コマ目を撮り直す</button>
           </div>
           
         </form>
@@ -78,7 +80,7 @@
         <!-- シャッターボタン -->
         <form>
           <div class="d-flex justify-content-evenly">
-            <button type="button" class="shutter2 btn-secondary">2コマ目</button>
+            <button type="button" class="shutter2 btn-secondary">2コマ目を撮り直す</button>
           </div>
         
         </form>
@@ -92,7 +94,7 @@
         <!-- シャッターボタン -->
         <form>
           <div class="d-flex justify-content-evenly">
-            <button type="button" class="shutter3 btn-secondary">3コマ目</button>
+            <button type="button" class="shutter3 btn-secondary">3コマ目を撮り直す</button>
             
           </div>
           
@@ -107,13 +109,13 @@
           <!-- シャッターボタン -->
           <form>
             <div class="d-flex justify-content-evenly">
-              <button type="button" class="shutter4 btn-secondary">4コマ目</button>
+              <button type="button" class="shutter4 btn-secondary">4コマ目を撮り直す</button>
             </div>
           </form>
       </div>
   </div>
   <!--------------------------------------------------------------------------------------->
-
+  
   {% if len==0 %}
   <div hidden >
     <input placeholder="何を表現してますか" id="anser" required>
@@ -233,6 +235,20 @@ navigator.mediaDevices.getUserMedia(constraints)
   console.log(err.name + ": " + err.message);
 });
 
+document.getElementsByClassName("all_click")[0].addEventListener("click", () => {
+  document.getElementsByClassName("shutter1")[0].click()
+  setTimeout(() => {
+    document.getElementsByClassName("shutter2")[0].click();
+    setTimeout(() => {
+      document.getElementsByClassName("shutter3")[0].click();
+      setTimeout(() => {
+          document.getElementsByClassName("shutter4")[0].click()
+        },5000);
+      },5000);
+  },5000);
+
+  
+});
 
 /**
  * シャッターボタン
