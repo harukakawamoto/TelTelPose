@@ -1,4 +1,374 @@
-{% extends "camera_template.html" %}
-{% block content %}
-<h1>{{ user_name }}さんのターン</h1>
-{% endblock %} 
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" >
+    <title>TelTelPose</title>
+    <!--Bootstrap CSS-->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet"
+      integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
+      
+    <!-- Place favicon.ico in the root directory -->
+  
+    <meta name="theme-color" content="#fafafa">
+    <!-- <link type="text/css" rel="stylesheet" href="/css/main.css" /> -->
+
+</head>
+<body>
+<header class=" bd-header bg-dark py-3  border-dark" >
+  <h2 class="text-light" style="text-align:center"><b>TelTelPose</b></h2>
+</header>
+
+<div class="container">
+  <div class="mt-4">
+
+
+    <h1>{{ user_name }}さんのターン</h1>
+
+    {% if len > 0 %}
+    <div class="d-flex justify-content-around mb-3">
+      {% for img in images %}
+      <img src = '{{img}}' width="300" height="200" style="border:2px solid">
+      {% endfor %}
+    </div>
+    <div class="d-flex justify-content-around mb-3">
+      {% for img in images %}
+      <h5>{{loop.index}}コマ目</h5>
+      {% endfor %}
+    </div>
+    {% endif %}
+  </div>
+
+  {% if len==0 %}
+  <div hidden >
+    <input placeholder="何を表現してますか" id="anser" required>
+  </div>
+  {% endif %}
+  {% if len>0 %}
+  <div  class="mt-3 mb-4 d-flex justify-content-evenly">
+    <input type="text" placeholder="お題は何だと思いましたか？" class="form-control input-lg" id="anser" required>
+  </div>
+  {% endif %}
+
+  <!-- webカメラの表示部分 -->
+  <!--------------------------------------------------------------------------------------->
+  
+  <div class="d-flex justify-content-evenly mb-3">
+    <h1 class="display-1" id="count1"></h1>
+    <video id="camera" width="60%" style="border:3px solid"></video>
+    <h1  class="display-1" id="count2"></h1>
+  </div>
+  <!--------------------------------------------------------------------------------------->
+  <div class="d-flex justify-content-evenly mt-3 mb-3">
+    <button type="button" class="all_click btn-secondary">一度に４コマ撮影</button>
+  </div>
+  <!-- 取った写真を表示する部分 -->
+  <!--------------------------------------------------------------------------------------->
+  <div class="d-flex justify-content-around">
+    <div class="display">
+      <!-- 取った写真を表示する部分 -->
+        <div>
+          <canvas id="picture1" width="300" height="200" style="border:2px solid"></canvas>
+        </div>
+        <!-- シャッターボタン -->
+        <form>
+          <div class="d-flex justify-content-evenly">
+            <button type="button" class="shutter1 btn-secondary">1コマ目を撮り直す</button>
+          </div>
+          
+        </form>
+      </div>
+      
+      <div class="display">
+      <!-- 取った写真を表示する部分 -->
+        <div>
+          <canvas id="picture2" width="300" height="200" style="border:2px solid"></canvas>
+        </div>
+        <!-- シャッターボタン -->
+        <form>
+          <div class="d-flex justify-content-evenly">
+            <button type="button" class="shutter2 btn-secondary">2コマ目を撮り直す</button>
+          </div>
+        
+        </form>
+      </div>
+      
+      <div class="display">
+      <!-- 取った写真を表示する部分 -->
+        <div>
+          <canvas id="picture3" width="300" height="200" style="border:2px solid"></canvas>
+        </div>
+        <!-- シャッターボタン -->
+        <form>
+          <div class="d-flex justify-content-evenly">
+            <button type="button" class="shutter3 btn-secondary">3コマ目を撮り直す</button>
+            
+          </div>
+          
+        </form>
+      </div>
+      
+      <div class="display">
+        <!-- 取った写真を表示する部分 -->
+          <div>
+            <canvas id="picture4" width="300" height="200" style="border:2px solid"></canvas>
+          </div>
+          <!-- シャッターボタン -->
+          <form>
+            <div class="d-flex justify-content-evenly">
+              <button type="button" class="shutter4 btn-secondary">4コマ目を撮り直す
+
+              </button>
+            </div>
+          </form>
+      </div>
+  </div>
+  <!--------------------------------------------------------------------------------------->
+  
+  
+
+  <div class="d-flex justify-content-evenly mt-4">
+      <button class="send_image btn btn-info btn-lg" type="submit">{{ next_user }}</button> 
+  </div>
+
+</div>
+
+
+
+
+<!-- シャッター音の設定 -->
+<!--------------------------------------------------------------------------------------->
+<audio id="se" preload="auto">
+  <source src="camera-shutter1.mp3" type="audio/mp3">
+</audio>
+<!-- -------------------------------------------------------------------- -->
+<!-- ここからjsの処理 -->
+<script src="//ajax.googleapis.com/ajax/libs/jquery/2.1.4/jquery.min.js"></script>
+
+<!-- <script type="text/javascript" src="{{ url_for('static', filename='js/video.js') }}"></script> -->
+<script>
+function send_img(canvas1,canvas2,canvas3,canvas4){
+  //canvas elementを取得
+  // var canvas = document.getElementById('picture');
+  //base64データを取得（エンコード）
+  var base641= canvas1.toDataURL('image/jpg');
+  var base642 = canvas2.toDataURL('image/jpg');
+  var base643 = canvas3.toDataURL('image/jpg');
+  var base644 = canvas4.toDataURL('image/jpg');
+  var anser   = document.getElementById('anser');
+  
+
+  var fData = new FormData();
+  fData.append('img1', base641);
+  fData.append('img2', base642);
+  fData.append('img3', base643);
+  fData.append('img4', base644);
+  fData.append('anser', anser.value);
+  console.log(fData.get('anser'))
+
+// ajax送信
+  $.ajax({
+      //画像処理サーバーに返す場合
+      url: "{{url_for('image_save')}}",   
+      type: 'POST',
+      dataType: 'text',
+      data: fData ,
+      contentType: false,
+      processData: false,
+      success: function(data, dataType) {
+          //非同期で通信成功時に読み出される [200 OK 時]
+          location.reload();
+          console.log('Success', data);
+      },
+      error: function(XMLHttpRequest, textStatus, errorThrown) {
+          //非同期で通信失敗時に読み出される
+          console.log('Error : ' + errorThrown);
+      }
+  });
+}
+
+function take_pic(ctx){
+  video.pause();  // 映像を停止
+  se.play();      // シャッター音
+  setTimeout( () => {
+  video.play();    // 0.5秒後にカメラ再開
+  }, 500);
+  ctx.drawImage(video, 0, 0, canvas.width, canvas.height);
+}
+
+// windowが読み込まれたタイミングで行う処理
+window.onload = () => {
+  // HTML側のオブジェクトを指定
+const video  = document.querySelector("#camera");
+const canvas1 = document.getElementById("picture1");
+const canvas2 = document.getElementById("picture2");
+const canvas3 = document.getElementById("picture3");
+const canvas4 = document.getElementById("picture4");
+const odai_predict = document.getElementById('odai')
+const se     = document.querySelector('#se');
+
+/** カメラ設定 */
+//   音は無し
+// 大きさ200×300
+// インカメラに指定
+const constraints = {
+  audio: false,
+  video: {
+    height: 200,
+    width: 300,
+    facingMode: "user"   // フロントカメラを利用する
+    // facingMode: { exact: "environment" }  // リアカメラを利用する場合
+  }
+};
+
+/**
+ * カメラを<video>と同期
+ */
+navigator.mediaDevices.getUserMedia(constraints)
+.then( (stream) => {
+  video.srcObject = stream;
+  video.onloadedmetadata = (e) => {
+    video.play();
+  };
+})
+.catch( (err) => {
+  console.log(err.name + ": " + err.message);
+});
+
+document.getElementsByClassName("all_click")[0].addEventListener("click", () => {
+  document.getElementsByClassName("shutter1")[0].click()
+  setTimeout(() => {
+    document.getElementsByClassName("shutter2")[0].click();
+    setTimeout(() => {
+      document.getElementsByClassName("shutter3")[0].click();
+      setTimeout(() => {
+          document.getElementsByClassName("shutter4")[0].click()
+        },5000);
+      },5000);
+  },5000);
+
+  
+});
+
+/**
+ * シャッターボタン
+ */
+//   シャッターボタンが押されたときの処理
+document.getElementsByClassName("shutter1")[0].addEventListener("click", () => {
+  count();
+  const ctx = canvas1.getContext("2d");
+
+  // 演出的な目的で一度映像を止めてSEを再生する
+  //シャッターが押されたら5秒後に処理を行う
+  setTimeout(() =>{
+  video.pause();
+  
+    // 映像を停止
+  se.play();      // シャッター音
+  setTimeout( () => {
+    video.play();    // 0.5秒後にカメラ再開
+  }, 500);
+
+  // canvasに画像を貼り付ける
+  ctx.drawImage(video, 0, 0, canvas1.width, canvas1.height);
+},5000);
+  // send_img(canvas1)
+});
+
+
+document.getElementsByClassName("shutter2")[0].addEventListener("click", () => {
+  count();
+  const ctx = canvas2.getContext("2d");
+
+  // 演出的な目的で一度映像を止めてSEを再生する
+  setTimeout(() =>{
+  video.pause();  // 映像を停止
+  se.play();      // シャッター音
+  setTimeout( () => {
+    video.play();    // 0.5秒後にカメラ再開
+  }, 500);
+
+  // canvasに画像を貼り付ける
+  ctx.drawImage(video,0, 0, canvas2.width, canvas2.height);
+  // send_img(canvas2)
+  },5000);
+});
+
+
+document.getElementsByClassName("shutter3")[0].addEventListener("click", () => {
+  count();
+  const ctx = canvas3.getContext("2d");
+
+  // 演出的な目的で一度映像を止めてSEを再生する
+  setTimeout(() =>{
+  video.pause();  // 映像を停止
+  se.play();      // シャッター音
+  setTimeout( () => {
+    video.play();    // 0.5秒後にカメラ再開
+  }, 500);
+
+  // canvasに画像を貼り付ける
+  ctx.drawImage(video, 0, 0, canvas1.width, canvas1.height);
+  // send_img(canvas3)
+  },5000);
+});
+
+
+document.getElementsByClassName("shutter4")[0].addEventListener("click", () => {
+  count();
+  const ctx = canvas4.getContext("2d");
+
+  // 演出的な目的で一度映像を止めてSEを再生する
+  setTimeout(() =>{
+  video.pause();  // 映像を停止
+  se.play();      // シャッター音
+  setTimeout( () => {
+    video.play();    // 0.5秒後にカメラ再開
+  }, 500);
+
+  // canvasに画像を貼り付ける
+  ctx.drawImage(video, 0, 0, canvas1.width, canvas1.height);
+  // send_img(canvas4)
+},5000);
+});
+
+
+document.getElementsByClassName("send_image")[0].addEventListener("click", () => {
+
+  send_img(canvas1,canvas2,canvas3,canvas4)
+});
+};
+
+// カメラのタイマー関数
+function count(){
+  var counter1 = document.getElementById("count1");
+  var counter2 = document.getElementById("count2");
+  let count = 4;
+  const countUp = () =>{
+    
+    if(count==0){
+      counter1.textContent='📷';
+      counter2.textContent='📷';
+    }else{
+      counter1.textContent=count;
+      counter2.textContent=count;
+    }
+    console.log(count--);
+    
+    
+  }
+  const intervalId = setInterval(() =>{
+    countUp();
+    if(count < 0){
+      
+      clearInterval(intervalId);//intervalIdをclearIntervalで指定している
+    }
+    }, 1000);
+    
+    
+}
+</script>
+<!----------------------------------------------------------------------------------------------------->
+</body>
+</html>
