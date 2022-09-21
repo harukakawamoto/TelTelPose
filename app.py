@@ -162,11 +162,10 @@ def anser():
     images = sorted(os.listdir('./static/image'), key=lambda s: int(re.search(r'\d+', s).group()))
     image_list = ['image/'+img for img in images]
     image_list = [image_list[idx:idx + 4] for idx in range(0,len(image_list), 4)]
-    # print(image_list)
     
     return render_template('result.html', anser=anser, odai=odai, player_list=player_list, images_list=image_list, predict_list = session['anser_predict'])
 
 
 
 if __name__=="__main__":
-    app.run(debug=True)
+    app.run(debug=False, port=int(os.environ.get("PORT", 5000)), host='0.0.0.0')
